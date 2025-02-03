@@ -22,6 +22,7 @@ func main() {
 
 	r.HandleFunc("/product/{productId}", base.GetProduct).Methods(http.MethodGet)
 	r.HandleFunc("/product", base.ListProducts).Methods(http.MethodGet)
+	r.HandleFunc("/order", base.PlaceOrder).Methods(http.MethodPost)
 
 	fmt.Println("Server starting on port 8080...")
 	log.Fatal(http.ListenAndServe(":8080", r))
