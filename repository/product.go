@@ -5,6 +5,7 @@ import (
 )
 
 type ProductDB struct {
+	// Lookup map allows O(1) get access.
 	lookup map[string]*models.Product
 	store  []*models.Product
 }
