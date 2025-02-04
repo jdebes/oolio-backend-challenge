@@ -5,7 +5,7 @@ Solution to the Backend Challenge.
 ## Setup
 
 1. Copy 3 couponbase gzip files to `data/`
-2. Run the application with the `data` argument for promo code validation first.
+2. Run the application with the `data` argument for promo code validation first (explanation on how this works below).
 
 ## Run
 
@@ -27,6 +27,10 @@ go test ./...
 ## Notes about API implementation
 - Used Hashmaps to simulate database to save time
 - Did not use OpenAPI generator to generate boilerplate from spec to save time on dealing with templating and other quirks.
+- Using API spec linked in the advanced challenge readme [here](https://orderfoodonline.deno.dev/public/openapi.yaml). There are inconsistencies between this one and the one in the repo.
+  - Did not add `images` to the order response as this is not in the linked spec.
+  - Did not add `couponCode` to the order response. This is existing in the demo server response but not linked spec.
+  - `price` is represented as float in all specs. I configured `decimcal.Decimal` to do this as well. But this adds risk of clients handling this incorrectly. String representation might be better.
 
 ## Promo Code Validation Approach
 
