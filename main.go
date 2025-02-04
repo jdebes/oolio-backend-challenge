@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
 	"jdebes/oolio-backend-challenge/data"
 	"jdebes/oolio-backend-challenge/handlers"
@@ -33,6 +33,10 @@ func main() {
 			log.Panic("Failed write valid promos", err)
 		}
 	case serverArg:
+		// This decimal values are returned as a number in JSON. This brings functionality in line with api spec.
+		// However, this is not the best idea, as it risks clients suffering from precision loss.
+		decimal.MarshalJSONWithoutQuotes = true
+
 		base := handlers.NewBaseHandler()
 
 		r := mux.NewRouter()
@@ -43,7 +47,7 @@ func main() {
 		r.HandleFunc("/product", base.ListProducts).Methods(http.MethodGet)
 		r.HandleFunc("/order", base.PlaceOrder).Methods(http.MethodPost)
 
-		fmt.Println("Server starting on port 8080...")
+		log.Info("Server starting on port 8080...")
 		log.Fatal(http.ListenAndServe(":8080", r))
 	default:
 		log.Errorf("Invalid argument, provide '%s' or '%s'", dataArg, serverArg)
