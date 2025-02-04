@@ -162,12 +162,12 @@ func TestPlaceOrder(t *testing.T) {
 			reqBody, err := json.Marshal(tt.orderRequest)
 			assert.NoError(t, err)
 
-			req, err := http.NewRequest("POST", "/order", bytes.NewReader(reqBody))
+			req, err := http.NewRequest("POST", "/api/order", bytes.NewReader(reqBody))
 			assert.NoError(t, err)
 
 			rr := httptest.NewRecorder()
 			router := mux.NewRouter()
-			router.HandleFunc("/order", handler.PlaceOrder)
+			router.HandleFunc("/api/order", handler.PlaceOrder)
 			router.ServeHTTP(rr, req)
 
 			assert.Equal(t, tt.expectedStatus, rr.Code)

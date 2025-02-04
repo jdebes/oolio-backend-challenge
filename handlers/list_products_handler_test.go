@@ -46,12 +46,12 @@ func TestListProducts(t *testing.T) {
 				productDB: tt.mockProductDB,
 			}
 
-			req, err := http.NewRequest("GET", "/product", nil)
+			req, err := http.NewRequest("GET", "/api/product", nil)
 			assert.NoError(t, err)
 
 			rr := httptest.NewRecorder()
 			router := mux.NewRouter()
-			router.HandleFunc("/product", handler.ListProducts)
+			router.HandleFunc("/api/product", handler.ListProducts)
 			router.ServeHTTP(rr, req)
 
 			assert.Equal(t, tt.expectedStatus, rr.Code)

@@ -39,13 +39,15 @@ func main() {
 
 		base := handlers.NewBaseHandler()
 
-		r := mux.NewRouter()
+		r := mux.NewRouter().StrictSlash(true)
 
-		r.Use(middleware.AuthMiddleware)
+		public := r.PathPrefix("/api").Subrouter()
+		public.HandleFunc("/product/{productId}", base.GetProduct).Methods(http.MethodGet)
+		public.HandleFunc("/product", base.ListProducts).Methods(http.MethodGet)
 
-		r.HandleFunc("/product/{productId}", base.GetProduct).Methods(http.MethodGet)
-		r.HandleFunc("/product", base.ListProducts).Methods(http.MethodGet)
-		r.HandleFunc("/order", base.PlaceOrder).Methods(http.MethodPost)
+		auth := r.PathPrefix("/api").Subrouter()
+		auth.Use(middleware.AuthMiddleware)
+		auth.HandleFunc("/order", base.PlaceOrder).Methods(http.MethodPost)
 
 		log.Info("Server starting on port 8080...")
 		log.Fatal(http.ListenAndServe(":8080", r))
