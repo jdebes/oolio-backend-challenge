@@ -24,7 +24,7 @@ func TestPlaceOrder(t *testing.T) {
 		expectedBody   string
 	}{
 		{
-			name:         "Validation Error",
+			name:         "Empty Fields",
 			orderRequest: models.OrderRequest{},
 			setupHandler: func() *BaseHandler {
 				mockPromoDB := repository.NewEmptyPromoDB()
@@ -40,7 +40,7 @@ func TestPlaceOrder(t *testing.T) {
 			expectedBody:   `{"description":"Validation exception"}`,
 		},
 		{
-			name: "Validation Error - Missing Coupon Code",
+			name: "Missing Coupon Code",
 			orderRequest: models.OrderRequest{
 				Items: []models.LineItem{
 					{ProductID: "1", Quantity: 1},
@@ -60,9 +60,30 @@ func TestPlaceOrder(t *testing.T) {
 			expectedBody:   `{"description":"Validation exception"}`,
 		},
 		{
-			name: "Invalid Promo Code",
+			name: "Promo Too Long",
 			orderRequest: models.OrderRequest{
 				CouponCode: "INVALIDCODE",
+				Items: []models.LineItem{
+					{ProductID: "1", Quantity: 1},
+				},
+			},
+			expectedStatus: http.StatusUnprocessableEntity,
+			expectedBody:   `{"description":"Validation exception"}`,
+			setupHandler: func() *BaseHandler {
+				mockPromoDB := repository.NewEmptyPromoDB()
+				productDB := repository.NewEmptyProductDB()
+
+				return &BaseHandler{
+					productDB: productDB,
+					promoDB:   mockPromoDB,
+					validator: validator.New(),
+				}
+			},
+		},
+		{
+			name: "Promo Too Short",
+			orderRequest: models.OrderRequest{
+				CouponCode: "SHORT",
 				Items: []models.LineItem{
 					{ProductID: "1", Quantity: 1},
 				},
