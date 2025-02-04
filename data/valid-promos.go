@@ -14,10 +14,11 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const ValidPromosFile = "couponbase_validpromos"
+const DirPrefix = "data/"
+
 const writerBufferSize = 100 * 1024 * 1024
-const validPromosFile = "couponbase_validpromos"
 const sortedPromosSuffix = "_sorted"
-const dirPrefix = "data/"
 
 type promoCode struct {
 	code string
@@ -200,7 +201,7 @@ func WriteValidPromos() error {
 
 	wg.Wait()
 
-	err := mergeSortedFiles(sortedFiles, dirPrefix+validPromosFile)
+	err := mergeSortedFiles(sortedFiles, DirPrefix+ValidPromosFile)
 	if err != nil {
 		return err
 	}

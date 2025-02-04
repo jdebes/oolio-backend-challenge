@@ -8,7 +8,7 @@ import (
 )
 
 func (s *BaseHandler) ListProducts(w http.ResponseWriter, r *http.Request) {
-	products := s.db.List()
+	products := s.productDB.List()
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

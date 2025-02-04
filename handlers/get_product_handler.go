@@ -12,7 +12,7 @@ func (s *BaseHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	productId := vars["productId"]
 
-	product, exists := s.db.Get(productId)
+	product, exists := s.productDB.Get(productId)
 	if !exists {
 		http.Error(w, "Product not found", http.StatusNotFound)
 		return

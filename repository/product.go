@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/shopspring/decimal"
 	"jdebes/oolio-backend-challenge/models"
 )
 
@@ -11,10 +12,18 @@ type ProductDB struct {
 }
 
 func NewProductDB() *ProductDB {
-	return &ProductDB{
+	sampleProducts := getSampleData()
+
+	productStore := &ProductDB{
 		lookup: make(map[string]*models.Product),
 		store:  []*models.Product{},
 	}
+
+	for _, product := range sampleProducts {
+		productStore.Insert(product)
+	}
+
+	return productStore
 }
 
 func (db *ProductDB) Insert(product models.Product) {
@@ -39,4 +48,14 @@ func (db *ProductDB) List() []models.Product {
 		products = append(products, *product)
 	}
 	return products
+}
+
+func getSampleData() []models.Product {
+	return []models.Product{
+		{ID: "1", Name: "Waffle with Berries", Category: "Waffle", Price: decimal.NewFromFloat(6.5)},
+		{ID: "2", Name: "Vanilla Bean Crème Brûlée", Category: "Crème Brûlée", Price: decimal.NewFromFloat(7)},
+		{ID: "3", Name: "Macaron Mix of Five", Category: "Macaron", Price: decimal.NewFromFloat(8)},
+		{ID: "4", Name: "Classic Tiramisu", Category: "Tiramisu", Price: decimal.NewFromFloat(5.5)},
+		{ID: "5", Name: "Pistachio Baklava", Category: "Baklava", Price: decimal.NewFromFloat(4)},
+	}
 }
