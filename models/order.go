@@ -12,6 +12,6 @@ type LineItem struct {
 }
 
 type OrderRequest struct {
-	CouponCode string     `json:"couponCode" validate:"omitempty,min=1"`
-	Items      []LineItem `json:"items" validate:"required,min=1"`
+	CouponCode string     `json:"couponCode" validate:"omitempty,min=8,max=10"`
+	Items      []LineItem `json:"items" validate:"required,min=1,dive,required"`
 }

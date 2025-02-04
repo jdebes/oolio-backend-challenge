@@ -2,11 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
+	log "github.com/sirupsen/logrus"
 	"jdebes/oolio-backend-challenge/models"
+	"jdebes/oolio-backend-challenge/util"
 )
 
 func (s *BaseHandler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
@@ -14,23 +15,26 @@ func (s *BaseHandler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error parsing request: %s", err), http.StatusBadRequest)
+		util.WriteError(w, http.StatusBadRequest, util.InvalidInput)
 		return
 	}
 
 	err = s.validator.Struct(&req)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Order Validation failed: %s", err), http.StatusBadRequest)
+		util.WriteError(w, http.StatusUnprocessableEntity, util.ValidationException)
 		return
 	}
 
-	// TODO validate coupon code function for advanced validation
+	if !s.promoDB.IsValidPromoCode(req.CouponCode) {
+		util.WriteError(w, http.StatusUnprocessableEntity, util.ValidationException)
+		return
+	}
 
 	products := make([]models.Product, 0, len(req.Items))
 	for _, item := range req.Items {
 		product, exists := s.productDB.Get(item.ProductID)
 		if !exists {
-			http.Error(w, fmt.Sprintf("Product not found: %s", item.ProductID), http.StatusBadRequest)
+			util.WriteError(w, http.StatusUnprocessableEntity, util.ValidationException)
 			return
 		}
 
@@ -43,10 +47,10 @@ func (s *BaseHandler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
 		Products: products,
 	}
 
+	if err := json.NewEncoder(w).Encode(order); err != nil {
+		util.WriteError(w, http.StatusInternalServerError, util.InternalServerError)
+		log.Errorf("Failed to encode order to JSON: %v", err)
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-
-	if err := json.NewEncoder(w).Encode(order); err != nil {
-		http.Error(w, fmt.Sprintf("Error sending response: %s", err), http.StatusInternalServerError)
-	}
 }
