@@ -5,7 +5,7 @@ Solution to the Backend Challenge.
 ## Setup
 
 1. Copy 3 couponbase gzip files to `data/`
-2. Run the application with the `data` argument for promo code validation first (explanation on how this works below). This take about 2-3 minutes.
+2. Run the application with the `data` argument for promo code validation first (explanation on how this works below). This takes about 2-3 minutes.
 
 ## Run
 
@@ -27,6 +27,7 @@ go test ./...
 ## Notes about API implementation
 - Used Hashmaps to simulate database to save time
 - Did not use OpenAPI generator to generate boilerplate from spec to save time on dealing with templating and other quirks.
+- Ideally constants such as api key secret etc should be passed as environment variables. I have skipped this to save time.
 - Using API spec linked in the advanced challenge readme [here](https://orderfoodonline.deno.dev/public/openapi.yaml). There are inconsistencies between this one and the one in the repo.
   - Did not add `images` to the order response as this is not in the linked spec.
   - Did not add `couponCode` to the order response. This is existing in the demo server response but not linked spec.
