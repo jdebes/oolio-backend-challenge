@@ -10,6 +10,10 @@ import (
 	"jdebes/oolio-backend-challenge/util"
 )
 
+var generateUUID = func() string {
+	return uuid.New().String()
+}
+
 func (s *BaseHandler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
 	var req models.OrderRequest
 
@@ -42,15 +46,15 @@ func (s *BaseHandler) PlaceOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	order := models.Order{
-		ID:       uuid.New().String(),
+		ID:       generateUUID(),
 		Items:    req.Items,
 		Products: products,
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
 	if err := json.NewEncoder(w).Encode(order); err != nil {
 		util.WriteError(w, http.StatusInternalServerError, util.InternalServerError)
 		log.Errorf("Failed to encode order to JSON: %v", err)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
 }

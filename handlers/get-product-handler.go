@@ -26,11 +26,11 @@ func (s *BaseHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
 	err = json.NewEncoder(w).Encode(product)
 	if err != nil {
 		util.WriteError(w, http.StatusInternalServerError, util.InternalServerError)
 		log.Errorf("Failed to encode product to JSON: %v", err)
 	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 }

@@ -23,9 +23,19 @@ func NewPromoDB() *PromoDB {
 	}
 }
 
+func NewEmptyPromoDB() *PromoDB {
+	return &PromoDB{
+		db: make(map[string]interface{}),
+	}
+}
+
 func (db *PromoDB) IsValidPromoCode(code string) bool {
 	_, exists := db.db[code]
 	return exists
+}
+
+func (db *PromoDB) InsertPromoCode(code string) {
+	db.db[code] = struct{}{}
 }
 
 func readPromos() (map[string]interface{}, error) {
