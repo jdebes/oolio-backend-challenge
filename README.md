@@ -5,7 +5,7 @@ Solution to the Backend Challenge.
 ## Setup
 
 1. Copy 3 couponbase gzip files to `data/`
-2. Run the application with the `data` argument for promo code validation first (explanation on how this works below).
+2. Run the application with the `data` argument for promo code validation first (explanation on how this works below). This take about 2-3 minutes.
 
 ## Run
 
@@ -70,7 +70,7 @@ The implementation can be found under [`data/valid_promos.go`](data/valid_promos
 #### Advantages and Alternatives
 
 Advantages:
-- Run time to find all valid promos is 2-3 minutes
+- Run time to find all valid promos is 2-3 minutes. Which is ideally suited for an assessment style challenge.
 - Very little memory overhead
 - Efficient lookup since we have eliminated noise
 - Don't have to spend time on setting up and inserting into a database for the assessment
