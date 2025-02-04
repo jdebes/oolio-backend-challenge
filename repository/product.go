@@ -26,6 +26,13 @@ func NewProductDB() *ProductDB {
 	return productStore
 }
 
+func NewEmptyProductDB() *ProductDB {
+	return &ProductDB{
+		lookup: make(map[string]*models.Product),
+		store:  []*models.Product{},
+	}
+}
+
 func (db *ProductDB) Insert(product models.Product) {
 	if _, exists := db.lookup[product.ID]; !exists {
 		db.store = append(db.store, &product)
